@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>adoolaTurayk's Chessboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-layout">
+        <div class="controls">
+            <button class="ctrlBtn" id="reverse">Reverse Board</button>
+            <button class="ctrlBtn" id="start">Start Game</button>
+            <button class="ctrlBtn" id="reset">Reset Game</button>
+            <button class="ctrlBtn" id="undo" disabled>Undo</button>
+            <button class="ctrlBtn" id="redo" disabled>Redo</button>
+            <button class="ctrlBtn" id="claimDraw" disabled>Claim Draw</button>
+        </div>
+        <div class="controls">
+            <button class="ctrlBtn parseBtn" id="impgn">Import PGN</button>
+            <button class="ctrlBtn parseBtn" id="imfen" title="Disables Move History">Import FEN</button>
+            <button class="ctrlBtn stringifyBtn" id="expgn">Export PGN</button>
+            <button class="ctrlBtn stringifyBtn" id="exfen">Export FEN</button>
+        </div>
+        <div id="timeDiv">
+            <label for="timerSelect">Time control</label>
+            <select name="timerSelect" id="timerSelect" class="ctrlBtn">
+                <option value="600-0" selected>Rapid · 10 min</option>
+                <option value="600-5">Rapid · 10 | 5</option>
+                <option value="900-10">Rapid · 15 | 10</option>
+                <option value="180-0">Blitz · 3 min</option>
+                <option value="180-2">Blitz · 3 | 2</option>
+                <option value="300-0">Blitz · 5 min</option>
+                <option value="60-0">Bullet · 1 min</option>
+                <option value="60-1">Bullet · 1 | 1</option>
+                <option value="120-1">Bullet · 2 | 1</option>
+            </select>
+        </div>
+        <div id="checkboxes" class="ctrlPnl">
+            <input type="checkbox" id="rotateWithTurn">
+            <label for="rotateWithTurn">Sync board orientation to turn</label>
+        </div>
+        <div class="chess-container">
+            <canvas id="boardCanvas" width="600" height="600" class="canvas-layer board-layer"></canvas>
+            <canvas id="piecesCanvas" width="600" height="600" class="canvas-layer pieces-layer"></canvas>
+            <canvas id="previewCanvas" width="600" height="600" class="canvas-layer preview-layer"></canvas>
+        </div>
+        <section class="material-time">
+            <section class="pData pOpp">
+                <label>Black</label>
+                <div class="pTime pOppTime">
+                    <h2 id="blackClock">10:00</h2>
+                </div>
+                <output class="material-advantage" id="blackMaterialAdvantage" aria-label="Black material advantage">0</output>
+            </section>
+            <section class="pData pSelf">
+                <label>White</label>
+                <div class="pTime pSelfTime">
+                    <h2 id="whiteClock">10:00</h2>
+                </div>
+                <output class="material-advantage" id="whiteMaterialAdvantage" aria-label="White material advantage">0</output>
+            </section>
+        </section>
+        <div class="results">
+            <div id="promotion" hidden>
+                <select name="promotionSelect" id="promotionSelect" class="ctrlBtn">
+                    <option value="0" disabled selected>Select a piece to promote to..</option>
+                    <option value="1">Queen</option>
+                    <option value="2">Rook</option>
+                    <option value="3">Bishop</option>
+                    <option value="4">Knight</option>
+                </select>
+                <button class="ctrlBtn" id="promoteBtn">Promote</button>
+            </div>
+            <label id="result">Begin Game</label>
+            <label id="turn">White to move</label>
+        </div>
+    </div>
+    <div class="history-players">
+        <section class="history" aria-labelledby="historyTitle">
+            <h2 class="historyTitle">Move history</h2>
+            <label id="ulPlaceholder">Begin Game</label>
+            <ul id="moveHistory" aria-live="polite"></ul>
+        </section>
+    </div>
+
+    <dialog id="textDisplayDialog" class="text-display-dialog" aria-labelledby="textDisplayTitle">
+        <div class="text-display-content">
+            <h2 id="textDisplayTitle"></h2>
+            <textarea id="textDisplayText" rows="12"></textarea>
+            <div class="text-display-actions">
+                <span id="textDisplayStatus" role="status" aria-live="polite"></span>
+                <button type="button" class="ctrlBtn" id="textDisplayCopy">Copy</button>
+                <button type="button" class="ctrlBtn" id="textDisplayClose">Close</button>
+                <button type="button" class="ctrlBtn" id="textDisplaySubmit">Done</button>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="js/state.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/rules.js"></script>
+    <script src="js/interaction.js"></script>
+    <script src="js/io.js" type="module"></script>
+</body>
+</html>

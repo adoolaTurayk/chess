@@ -1,0 +1,327 @@
+body {
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+
+    display: flex;
+    flex-direction: row;
+    background-color: #312e2b;
+    justify-content: center;
+}
+.game-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: clamp(16px, 4vh, 32px);
+    min-height: 100vh;
+    min-height: 100svh;
+    box-sizing: border-box;
+    background-color: #312e2b;
+    padding: 16px 12px;
+}
+
+.chess-container {
+    position: relative;
+    width: min(600px, calc(100vw - 24px));
+    aspect-ratio: 1;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    background-color: #312e2b;
+    flex: 0 0 auto;
+}
+
+.canvas-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.board-layer {
+    z-index: 0;
+}
+
+.pieces-layer {
+    z-index: 2;
+}
+
+.pieces-layer:focus {
+    outline: none;
+}
+.preview-layer {
+    z-index: 1;
+}
+
+.preview-layer:focus {
+    outline: none;
+}
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 100%;
+}
+.toggle-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 8px;
+    color: white;
+    font: 14px/1.2 sans-serif;
+    cursor: pointer;
+}
+.toggle-control input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: #d6bd57;
+}
+.ctrlBtn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+.results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vh;
+    margin-bottom: 0;
+    font-size: 30px;
+    font-family: sans-serif;
+    color: white;
+}
+.history {
+    width: min(400px, calc(100vw - 24px));
+    max-height: 100%;
+    overflow-y: auto;
+    color: white;
+    font: 14px/1.5 monospace;
+    
+    padding: 10px;
+}
+.historyTitle {
+    margin: 0 0 6px;
+    font-family: sans-serif;
+    font-weight: 500;
+    font-size: 30px;
+}
+.history-players{
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: 50px;
+}
+.material-time {
+    padding: 10px;
+
+    width: min(600px, calc(100vw - 24px));
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 50%;
+}
+#timeDiv {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+}
+#timerSelect:disabled {
+    opacity: 0.72;
+}
+.pOppTime {
+    background-color: rgb(27, 27, 27);
+}
+.pSelfTime {
+    background-color: white;
+}
+.pTime {
+    max-width: 80px;
+    padding: 5px 30px;
+    border-radius: 5px;
+    text-align: center;
+}
+.pTime h2 {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+}
+.pTime.active-clock {
+    box-shadow: 0 0 0 2px #d6bd57;
+}
+.pTime.low-time h2 {
+    color: #c63636;
+}
+.material-advantage {
+    min-height: 1.2em;
+    margin-top: 4px;
+    color: #e7d27c;
+    font: 600 14px/1.2 monospace;
+    text-align: center;
+}
+.pData {
+    display: flex;
+    align-items: center;
+    font-family: monospace;
+    flex-direction: column;
+}
+@media (max-width: 1100px) {
+    body {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .game-layout {
+        width: 100%;
+    }
+
+    .history-players {
+        align-self: center;
+        width: min(600px, calc(100vw - 24px));
+        box-sizing: border-box;
+        margin: 0 12px 24px;
+    }
+}
+
+#moveHistory {
+    margin: 0;
+    padding-left: 28px;
+}
+#moveHistory li {
+    padding: 2px 6px;
+}
+#moveHistory li.current {
+    background: rgba(255, 255, 255, 0.14);
+}
+.ctrlBtn {
+    background-color: rgb(100, 100, 100);
+    padding: 10px;
+    font-size: 20px;
+    border: 2px solid gray;
+    border-radius: 10px;
+}
+.ctrlPnl {
+    background-color: rgb(100, 100, 100);
+    padding: 10px;
+    font-size: 20px;
+    border: 2px solid gray;
+    border-radius: 10px;
+}
+.ctrlBtn:hover {
+    background-color: rgb(80, 79, 79);
+    border: 2px solid rgb(114, 114, 114);
+}
+.ctrlBtn:active {
+    background-color: rgb(74, 73, 73);
+    border: 2px solid rgb(114, 114, 114);
+}
+.ctrlBtn:disabled:hover,
+.ctrlBtn:disabled:active {
+    background-color: rgb(100, 100, 100);
+    border: 2px solid gray;
+}
+#turn {
+    font-size: 17px;
+}
+#checkboxes {
+    font-family: sans-serif;
+}
+#promotionSelect {
+    margin-bottom: 1vh;
+}
+.parseBtn {
+    background-color: rgb(135, 84, 75);
+    border-color: tomato;
+    font-size: 15px;
+    font-weight: bold;
+}
+.parseBtn:hover {
+    background-color: rgb(177, 94, 79);
+    border-color: tomato;
+}
+.stringifyBtn {
+    background-color: rgb(75, 135, 132);
+    border-color: aqua;
+    font-size: 15px;
+    font-weight: bold;
+}
+.stringifyBtn:hover {
+    background-color: rgb(79, 159, 177);
+    border-color: aqua;
+}
+.text-display-dialog {
+    width: min(640px, calc(100vw - 48px));
+    max-width: none;
+    padding: 0;
+    border: 1px solid #777;
+    border-radius: 8px;
+    color: white;
+    background: #312e2b;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+}
+.text-display-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.68);
+}
+.text-display-content {
+    display: grid;
+    gap: 14px;
+    padding: 20px;
+}
+.text-display-content h2 {
+    margin: 0;
+    font: 600 20px/1.3 sans-serif;
+}
+#textDisplayText {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 180px;
+    resize: vertical;
+    padding: 12px;
+    border: 1px solid #777;
+    border-radius: 4px;
+    color: white;
+    background: #22201e;
+    font: 14px/1.5 monospace;
+}
+.text-display-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+#textDisplayStatus {
+    flex: 1 1 auto;
+    color: #e7d27c;
+    font: 13px/1.3 sans-serif;
+}
+#textDisplaySubmit[hidden] {
+    display: none;
+}
+
+@media (max-width: 420px) {
+    .ctrlBtn {
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    .results {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    #promotion {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    #promotion[hidden] {
+        display: none;
+    }
+}
+ul {
+    list-style-type: none;
+}

@@ -1,0 +1,15 @@
+{
+  "site": {
+    "undoRedoEnabled": false,
+    "importExportEnabled": false,
+    "moveHistoryEnabled": false,
+    "openingsEnabled": false
+  },
+  "user": {
+    "movePreviewEnabled": false,
+    "premovesEnabled": true,
+    "multiplePremovesEnabled": true,
+    "syncBoardOrientationToTurn": true,
+    "sfxEnabled": true
+  }
+}
