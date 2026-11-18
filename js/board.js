@@ -37,6 +37,7 @@ function preloadAssets(){
         for (const name of sfxFileNames) {
             const sfxPromise = new Promise((resolve, reject) => {
                 const sfx = new Audio(`sfx/${name}`);
+                    sfx.muted = !userSettings.sfxEnabled;
 
                 sfx.oncanplaythrough = () => {
                     sfxCache[name.slice(0, -4)] = (sfx)
@@ -136,6 +137,10 @@ function resetPiecesArray(){
     moveList = [];
     enPassantTarget = null;
     whiteTurn = true;
+    fullmoveNumber = 1;
+    gameStartFEN = null;
+    gameStartWhiteTurn = true;
+    gameStartFullmoveNumber = 1;
     syncBoardToTurn();
     halfmoveClock = 0;
     positionCounts = new Map();

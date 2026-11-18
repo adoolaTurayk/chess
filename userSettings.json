@@ -1,0 +1,9 @@
+{
+  "user": {
+    "movePreviewEnabled": true,
+    "premovesEnabled": true,
+    "multiplePremovesEnabled": true,
+    "syncBoardOrientationToTurn": true,
+    "sfxEnabled": true
+  }
+}

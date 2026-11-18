@@ -46,10 +46,28 @@ const pieceImageCache = {};
 const sfxCache = {};
 const tileSize = piecesCanvas.width / 8;
 
+function playSfx(name) {
+    if (!userSettings.sfxEnabled) return;
+    const sound = sfxCache[name];
+    if (sound) sound.play();
+}
+
 let whiteTurn = true;
 let gameState = 0; // 0 = Stopped 1 = Ongoing
+let gameType = "Rapid";
 let enPassantTarget = null;
 let boardReversed = false;
+let fullmoveNumber = 1;
+let gameStartFEN = null;
+let gameStartWhiteTurn = true;
+let gameStartFullmoveNumber = 1;
+let userSettings = {
+    movePreviewEnabled: false,
+    premovesEnabled: true,
+    multiplePremovesEnabled: true,
+    syncBoardOrientationToTurn: true,
+    sfxEnabled: true
+};
 let halfmoveClock = 0;
 let positionCounts = new Map();
 let historyCursor = 0;

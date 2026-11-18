@@ -28,7 +28,8 @@ function mouseDownEvent(e) {
         dragState.piece = pieceFound;
         dragState.origin = [square.file, square.rank];
         dragState.clickMove = false;
-        drawMovePreview(pieceFound);
+        if (userSettings.movePreviewEnabled) drawMovePreview(pieceFound);
+        else clearMovePreview();
         const {x: piecePixelX, y: piecePixelY} = squareToPixel(pieceFound.file, pieceFound.rank);
         dragState.offsetX = mouseX - piecePixelX;
         dragState.offsetY = mouseY - piecePixelY;
@@ -74,6 +75,7 @@ function stopChessClock() {
 
 function resetChessClock() {
     stopChessClock();
+    gameType = timerSelect.selectedOptions[0].dataset.gameType;
     const [minutes, increment] = timerSelect.value.split("-").map(Number);
     clockInitialSeconds = minutes;
     clockIncrementSeconds = increment;
@@ -123,6 +125,10 @@ function captureGameSnapshot() {
         whiteTurn,
         enPassantTarget: enPassantTarget ? {...enPassantTarget} : null,
         halfmoveClock,
+        fullmoveNumber,
+        gameStartFEN,
+        gameStartWhiteTurn,
+        gameStartFullmoveNumber,
         positionCounts: [...positionCounts.entries()],
         clockRemaining: [...clockRemaining],
         activeClockColor,
@@ -143,13 +149,25 @@ function initializeMoveHistory() {
 
 function renderMoveHistory() {
     moveHistoryElement.replaceChildren();
-    for (let index = 0; index < moveList.length; index += 2) {
+    const items = [];
+    let index = 0;
+    let moveNumber = gameStartFullmoveNumber;
+
+    if (!gameStartWhiteTurn && moveList.length > 0) {
         const item = document.createElement("li");
-        const moveNumber = Math.floor(index / 2) + 1;
-        item.textContent = `${moveNumber}. ${moveList[index]}${moveList[index + 1] ? ` ${moveList[index + 1]}` : ""}`;
-        if (index + 2 >= historyCursor) item.classList.add("current");
-        moveHistoryElement.append(item);
+        item.textContent = `${moveNumber}... ${moveList[index]}`;
+        items.push(item);
+        index++;
+        moveNumber++;
     }
+
+    for (; index < moveList.length; index += 2, moveNumber++) {
+        const item = document.createElement("li");
+        item.textContent = `${moveNumber}. ${moveList[index]}${moveList[index + 1] ? ` ${moveList[index + 1]}` : ""}`;
+        items.push(item);
+    }
+    if (items.length > 0) items[items.length - 1].classList.add("current");
+    moveHistoryElement.append(...items);
     moveHistoryElement.scrollTop = moveHistoryElement.scrollHeight;
 }
 
@@ -181,6 +199,10 @@ function restoreHistory(index) {
     syncBoardToTurn();
     enPassantTarget = snapshot.enPassantTarget ? {...snapshot.enPassantTarget} : null;
     halfmoveClock = snapshot.halfmoveClock;
+    fullmoveNumber = snapshot.fullmoveNumber ?? 1;
+    gameStartFEN = snapshot.gameStartFEN ?? null;
+    gameStartWhiteTurn = snapshot.gameStartWhiteTurn ?? true;
+    gameStartFullmoveNumber = snapshot.gameStartFullmoveNumber ?? 1;
     positionCounts = new Map(snapshot.positionCounts);
     clockRemaining = [...snapshot.clockRemaining];
     timerSelect.value = snapshot.clockPreset;
@@ -347,6 +369,7 @@ async function mouseUpEvent(e) {
 
             updateMaterialAdvantage();
             completeClockTurn(movingPiece.color);
+            if (movingPiece.color === 1) fullmoveNumber++;
             whiteTurn = whiteTurn ? false : true;
             const previousOrientation = boardReversed;
             syncBoardToTurn();
@@ -356,7 +379,7 @@ async function mouseUpEvent(e) {
             moveMade = true;
         }
         else {
-            sfxCache["illegal"].play();
+            playSfx("illegal");
         }
     }
 
@@ -391,13 +414,13 @@ async function mouseUpEvent(e) {
     recordCompletedMove(notation);
 
     if (isCheck) {
-        sfxCache["move-check"].play();
+        playSfx("move-check");
         drawManualCheckerboard();
     }
-    else if (capturedPiece || enPassantCapture) sfxCache["capture"].play();
-    else if (!isCastle) sfxCache["move-self"].play();
-    if (isCastle) sfxCache["castle"].play();
-    if (isPromotion) sfxCache["promote"].play();
+    else if (capturedPiece || enPassantCapture) playSfx("capture");
+    else if (!isCastle) playSfx("move-self");
+    if (isCastle) playSfx("castle");
+    if (isPromotion) playSfx("promote");
 }
 
 async function initGame() {
@@ -457,7 +480,7 @@ function startGame(){
         .then(() => console.log("Audio engine successfully unlocked for the session!"))
         .catch(err => console.error(err));
  
-    sfxCache["game-start"].play();
+    playSfx("game-start");
 
     document.getElementById("ulPlaceholder").hidden = true;
 

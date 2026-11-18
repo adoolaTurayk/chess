@@ -473,7 +473,7 @@ function endGame(checkmate, winner=null, draw, drawType=0) {
             }
         }
 
-        sfxCache["game-end"].play();
+        playSfx("game-end");
         gameState = 0;
         start.disabled = false;
         stopChessClock();
